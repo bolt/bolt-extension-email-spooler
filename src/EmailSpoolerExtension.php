@@ -2,13 +2,14 @@
 
 namespace Bolt\Extension\Bolt\EmailSpooler;
 
+use Bolt\Extension\Bolt\EmailSpooler\Command;
+use Bolt\Extension\Bolt\EmailSpooler\EventListener\QueueListener;
 use Bolt\Extension\SimpleExtension;
+use Pimple as Container;
 use Silex\Application;
 use Swift_FileSpool as SwiftFileSpool;
 use Swift_Mailer as SwiftMailer;
 use Swift_Transport_SpoolTransport as SwiftTransportSpoolTransport;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Email spooler extension loader.
@@ -37,17 +38,17 @@ class EmailSpoolerExtension extends SimpleExtension
                 return new EventListener\QueueListener($app);
             }
         );
+
+        $app['dispatcher']->addSubscriber($app['mailer.queue.listener']);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function subscribe(EventDispatcherInterface $dispatcher)
+    protected function registerNutCommands(Container $container)
     {
-        /** @var Application $app */
-        $app = $this->getContainer();
-
-        $dispatcher->addListener(KernelEvents::RESPONSE,  [$app['mailer.queue.listener'], 'retry']);
-        $dispatcher->addListener(KernelEvents::TERMINATE, [$app['mailer.queue.listener'], 'flush']);
+        return [
+            new Command\MailSpoolCommand($container),
+        ];
     }
 }
