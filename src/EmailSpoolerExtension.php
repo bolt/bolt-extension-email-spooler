@@ -23,12 +23,18 @@ class EmailSpoolerExtension extends SimpleExtension
     protected function registerServices(Application $app)
     {
         $app['mailer'] = $app->share(
-            function () use ($app) {
+            function ($app) {
                 $app['mailer.initialized'] = true;
                 $spoolDir = $app['resources']->getPath('cache/.spool');
                 $transport = new SwiftTransportSpoolTransport($app['swiftmailer.transport.eventdispatcher'], new SwiftFileSpool($spoolDir));
 
                 return new SwiftMailer($transport);
+            }
+        );
+
+        $app['mailer.queue.listener'] = $app->share(
+            function ($app) {
+                return new EventListener\QueueListener($app);
             }
         );
     }
@@ -40,6 +46,8 @@ class EmailSpoolerExtension extends SimpleExtension
     {
         /** @var Application $app */
         $app = $this->getContainer();
-        $dispatcher->addListener(KernelEvents::TERMINATE, [new EventListener\QueueListener($app), 'flush']);
+
+        $dispatcher->addListener(KernelEvents::RESPONSE,  [$app['mailer.queue.listener'], 'retry']);
+        $dispatcher->addListener(KernelEvents::TERMINATE, [$app['mailer.queue.listener'], 'flush']);
     }
 }
