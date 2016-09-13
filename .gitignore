@@ -1,0 +1,4 @@
+vendor/
+phpunit.xml
+config.yml
+composer.lock
