@@ -1,0 +1,40 @@
+{
+    "name": "bolt/email-spooler",
+    "description": "",
+    "type": "bolt-extension",
+    "keywords": [
+        "email",
+        "spool"
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "bolt/bolt": "^3.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gawain Lynch",
+            "email": "gawain.lynch@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "name": "bolt",
+            "type": "composer",
+            "url": "https://extensions.bolt.cm/satis/"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Bolt\\Extension\\Bolt\\EmailSpooler\\": "src"
+        }
+    },
+    "extra": {
+        "bolt-class": "Bolt\\Extension\\Bolt\\EmailSpooler\\EmailSpoolerExtension",
+        "branch-alias": {
+            "dev-master": "3.0.x-dev"
+        }
+    }
+}
