@@ -14,6 +14,7 @@ use Swift_Transport_SpoolTransport as SwiftTransportSpoolTransport;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -28,10 +29,10 @@ class MailSpoolCommand extends BaseCommand
         $this
             ->setName('email:spool')
             ->setDescription('Manage the email spool.')
-            ->addArgument('clear', InputArgument::OPTIONAL, 'Clear all un-sent message files from the queue. USE WITH CAUTION!')
-            ->addArgument('flush', InputArgument::OPTIONAL, 'Flush (send) any queued emails.')
-            ->addArgument('recover', InputArgument::OPTIONAL, 'Attempt to restore any incomplete email to a valid state.')
-            ->addArgument('show', InputArgument::OPTIONAL, 'Show any queued emails.')
+            ->addOption('clear', null,   InputOption::VALUE_NONE, 'Clear all un-sent message files from the queue. USE WITH CAUTION!')
+            ->addOption('flush', null,   InputOption::VALUE_NONE, 'Flush (send) any queued emails.')
+            ->addOption('recover', null, InputOption::VALUE_NONE, 'Attempt to restore any incomplete email to a valid state.')
+            ->addOption('show', null,    InputOption::VALUE_NONE, 'Show any queued emails.')
         ;
     }
 
@@ -44,17 +45,17 @@ class MailSpoolCommand extends BaseCommand
         /** @var SwiftFileSpool $spool */
         $spool = $transport->getSpool();
 
-        if ($input->getArgument('show')) {
+        if ($input->hasOption('show')) {
             $this->showQueue($output);
-        } elseif ($input->getArgument('recover')) {
+        } elseif ($input->hasOption('recover')) {
             $output->write('<info>Attempting recovery of failed email messages to the queue…</info>');
             $spool->recover();
             $output->writeln('<info>  [OK]</info>');
-        } elseif ($input->getArgument('flush')) {
+        } elseif ($input->hasOption('flush')) {
             $output->write('<info>Flushing queued emails…</info>');
             $spool->flushQueue($this->app['swiftmailer.transport']);
             $output->writeln('<info>  [OK]</info>');
-        } elseif ($input->getArgument('clear')) {
+        } elseif ($input->hasOption('clear')) {
             $output->writeln('<info>Deleting un-sent emails from the queue…</info>');
             $this->clearQueue($output);
         }
