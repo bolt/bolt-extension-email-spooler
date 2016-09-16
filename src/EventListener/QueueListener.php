@@ -114,10 +114,10 @@ class QueueListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::TERMINATE, 'retry',
-            KernelEvents::TERMINATE, 'flush',
-            QueueListener::RETRY,    'retry',
-            QueueListener::FLUSH,    'flush',
+            KernelEvents::TERMINATE => 'retry',
+            KernelEvents::TERMINATE => 'flush',
+            QueueListener::RETRY    => 'retry',
+            QueueListener::FLUSH    => 'flush',
         ];
     }
 }
