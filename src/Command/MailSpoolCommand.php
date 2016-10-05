@@ -45,19 +45,21 @@ class MailSpoolCommand extends BaseCommand
         /** @var SwiftFileSpool $spool */
         $spool = $transport->getSpool();
 
-        if ($input->hasOption('show')) {
+        if ($input->getOption('show')) {
             $this->showQueue($output);
-        } elseif ($input->hasOption('recover')) {
+        } elseif ($input->getOption('recover')) {
             $output->write('<info>Attempting recovery of failed email messages to the queue…</info>');
             $spool->recover();
             $output->writeln('<info>  [OK]</info>');
-        } elseif ($input->hasOption('flush')) {
+        } elseif ($input->getOption('flush')) {
             $output->write('<info>Flushing queued emails…</info>');
             $spool->flushQueue($this->app['swiftmailer.transport']);
             $output->writeln('<info>  [OK]</info>');
-        } elseif ($input->hasOption('clear')) {
+        } elseif ($input->getOption('clear')) {
             $output->writeln('<info>Deleting un-sent emails from the queue…</info>');
             $this->clearQueue($output);
+        } else {
+            $output->writeln('<info>no option found ... please use one of "--clear|flush|recover|show"</info>');
         }
     }
 
