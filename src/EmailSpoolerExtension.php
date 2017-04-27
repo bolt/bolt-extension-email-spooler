@@ -2,8 +2,7 @@
 
 namespace Bolt\Extension\Bolt\EmailSpooler;
 
-use Bolt\Extension\Bolt\EmailSpooler\Command;
-use Bolt\Extension\Bolt\EmailSpooler\EventListener\QueueListener;
+
 use Bolt\Extension\SimpleExtension;
 use Pimple as Container;
 use Silex\Application;

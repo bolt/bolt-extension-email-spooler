@@ -10,8 +10,8 @@ use Swift_Mailer as SwiftMailer;
 use Swift_Transport_SpoolTransport as SwiftTransportSpoolTransport;
 use Swift_TransportException as SwiftTransportException;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -116,8 +116,8 @@ class QueueListener implements EventSubscriberInterface
         return [
             KernelEvents::TERMINATE => 'retry',
             KernelEvents::TERMINATE => 'flush',
-            QueueListener::RETRY    => 'retry',
-            QueueListener::FLUSH    => 'flush',
+            self::RETRY             => 'retry',
+            self::FLUSH             => 'flush',
         ];
     }
 }
