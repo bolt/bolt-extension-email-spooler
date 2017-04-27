@@ -2,7 +2,6 @@
 
 namespace Bolt\Extension\Bolt\EmailSpooler;
 
-
 use Bolt\Extension\SimpleExtension;
 use Pimple as Container;
 use Silex\Application;
@@ -25,7 +24,7 @@ class EmailSpoolerExtension extends SimpleExtension
         $app['mailer'] = $app->share(
             function ($app) {
                 $app['mailer.initialized'] = true;
-                $spoolDir = $app['resources']->getPath('cache/.spool');
+                $spoolDir = $app['path_resolver']->resolve('%cache%/.spool');
                 $transport = new SwiftTransportSpoolTransport($app['swiftmailer.transport.eventdispatcher'], new SwiftFileSpool($spoolDir));
 
                 return new SwiftMailer($transport);
