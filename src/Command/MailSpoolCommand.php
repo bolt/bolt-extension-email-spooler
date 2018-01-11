@@ -37,6 +37,11 @@ class MailSpoolCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!$this->app['swiftmailer.use_spool']) {
+            $output->write('<info>Spool is disabled</info>');
+            return;
+        }
+
         /** @var SwiftMailer $mailer */
         $mailer = $this->app['mailer'];
         /** @var SwiftTransportSpoolTransport $transport */

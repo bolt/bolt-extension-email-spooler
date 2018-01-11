@@ -44,6 +44,10 @@ class QueueListener implements EventSubscriberInterface
      */
     public function flush(Event $event = null)
     {
+        if (!$this->app['swiftmailer.use_spool']) {
+            return;
+        }
+
         /** @var SwiftMailer $mailer */
         $mailer = $this->app['mailer'];
         /** @var SwiftTransportSpoolTransport $transport */
@@ -67,6 +71,10 @@ class QueueListener implements EventSubscriberInterface
      */
     public function retry()
     {
+        if (!$this->app['swiftmailer.use_spool']) {
+            return;
+        }
+
         $failedRecipients = [];
         /** @var SwiftMailer $mailer */
         $mailer = $this->app['mailer'];
