@@ -6,8 +6,6 @@ use Bolt\Extension\SimpleExtension;
 use Pimple as Container;
 use Silex\Application;
 use Swift_FileSpool as SwiftFileSpool;
-use Swift_Mailer as SwiftMailer;
-use Swift_Transport_SpoolTransport as SwiftTransportSpoolTransport;
 
 /**
  * Email spooler extension loader.
@@ -21,15 +19,11 @@ class EmailSpoolerExtension extends SimpleExtension
      */
     protected function registerServices(Application $app)
     {
-        $app['mailer'] = $app->share(
-            function ($app) {
-                $app['mailer.initialized'] = true;
-                $spoolDir = $app['path_resolver']->resolve('%cache%/.spool');
-                $transport = new SwiftTransportSpoolTransport($app['swiftmailer.transport.eventdispatcher'], new SwiftFileSpool($spoolDir));
+        $app['swiftmailer.spool'] = $app->share(function ($app) {
+            $spoolDir = $app['path_resolver']->resolve('%cache%/.spool');
 
-                return new SwiftMailer($transport);
-            }
-        );
+            return new SwiftFileSpool($spoolDir);
+        });
 
         $app['mailer.queue.listener'] = $app->share(
             function ($app) {
