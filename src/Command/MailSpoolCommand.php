@@ -39,6 +39,7 @@ class MailSpoolCommand extends BaseCommand
     {
         if (!$this->app['swiftmailer.use_spool']) {
             $output->write('<info>Spool is disabled</info>');
+
             return;
         }
 
