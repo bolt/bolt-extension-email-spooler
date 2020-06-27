@@ -6,6 +6,7 @@ use Bolt\Extension\SimpleExtension;
 use Pimple as Container;
 use Silex\Application;
 use Swift_FileSpool as SwiftFileSpool;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Email spooler extension loader.
@@ -30,8 +31,18 @@ class EmailSpoolerExtension extends SimpleExtension
                 return new EventListener\QueueListener($app);
             }
         );
+    }
 
-        $app['dispatcher']->addSubscriber($app['mailer.queue.listener']);
+    /**
+     * {@inheritdoc}
+     */
+    public function boot(Application $app)
+    {
+        parent::boot($app);
+
+        /** @var EventDispatcherInterface $dispatcher */
+        $dispatcher = $app['dispatcher'];
+        $dispatcher->addSubscriber($app['mailer.queue.listener']);
     }
 
     /**
